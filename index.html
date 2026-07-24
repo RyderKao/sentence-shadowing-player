@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Sentence Shadowing Player</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header>
+      <p class="eyebrow">Spanish Shadowing Tool</p>
+      <h1>Sentence Shadowing Player</h1>
+      <p class="subtitle">以句子為單位播放 YouTube 或本機音檔，並同步顯示原文與中文翻譯。</p>
+    </header>
+
+    <section class="panel setup-panel">
+      <div class="tabs" role="tablist">
+        <button id="youtubeTab" class="tab active" type="button">YouTube</button>
+        <button id="audioTab" class="tab" type="button">本機音檔</button>
+      </div>
+
+      <div id="youtubeSetup" class="source-panel">
+        <label for="youtubeUrl">YouTube URL</label>
+        <div class="inline-row">
+          <input id="youtubeUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." />
+          <button id="loadYoutubeBtn" type="button">載入影片</button>
+        </div>
+      </div>
+
+      <div id="audioSetup" class="source-panel hidden">
+        <label for="audioFile">MP3 / M4A / WAV</label>
+        <input id="audioFile" type="file" accept="audio/*,.mp3,.m4a,.wav,.ogg,.aac" />
+      </div>
+
+      <div class="file-grid">
+        <div>
+          <label for="sourceSubtitle">原文字幕（SRT / VTT）</label>
+          <input id="sourceSubtitle" type="file" accept=".srt,.vtt,text/vtt,application/x-subrip" />
+        </div>
+        <div>
+          <label for="translationSubtitle">中文字幕（可選，SRT / VTT）</label>
+          <input id="translationSubtitle" type="file" accept=".srt,.vtt,text/vtt,application/x-subrip" />
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button id="processBtn" class="primary" type="button">建立逐句播放器</button>
+        <button id="demoBtn" type="button">載入示範字幕</button>
+      </div>
+
+      <p id="status" class="status" aria-live="polite">請先選擇來源並載入原文字幕。</p>
+    </section>
+
+    <section id="playerSection" class="panel player-panel hidden">
+      <div id="mediaContainer" class="media-container">
+        <div id="youtubePlayer"></div>
+        <audio id="audioPlayer" controls preload="metadata"></audio>
+      </div>
+
+      <div class="progress-row">
+        <span id="sentenceCounter">0 / 0</span>
+        <input id="sentenceSlider" type="range" min="0" max="0" value="0" />
+      </div>
+
+      <article class="sentence-card">
+        <div class="sentence-label">原文</div>
+        <p id="sourceText" class="source-text">—</p>
+
+        <div class="sentence-label translation-label">中文翻譯</div>
+        <p id="translationText" class="translation-text">尚未提供中文字幕。</p>
+
+        <p id="timeText" class="time-text">00:00.000 – 00:00.000</p>
+      </article>
+
+      <div class="main-controls">
+        <button id="prevBtn" type="button">◀ 上一句</button>
+        <button id="playSentenceBtn" class="primary large" type="button">▶ 播放本句</button>
+        <button id="nextBtn" type="button">下一句 ▶</button>
+      </div>
+
+      <div class="settings-grid">
+        <label>
+          播放速度
+          <select id="speedSelect">
+            <option value="0.6">0.6×</option>
+            <option value="0.75">0.75×</option>
+            <option value="0.9">0.9×</option>
+            <option value="1" selected>1.0×</option>
+            <option value="1.1">1.1×</option>
+            <option value="1.25">1.25×</option>
+            <option value="1.5">1.5×</option>
+          </select>
+        </label>
+
+        <label>
+          單句循環
+          <select id="loopSelect">
+            <option value="1" selected>播放 1 次</option>
+            <option value="3">播放 3 次</option>
+            <option value="infinite">無限循環</option>
+          </select>
+        </label>
+
+        <label class="checkbox-label">
+          <input id="autoNextCheckbox" type="checkbox" />
+          播放後自動下一句
+        </label>
+      </div>
+
+      <section class="sentence-list-section">
+        <div class="list-header">
+          <h2>句子列表</h2>
+          <input id="searchInput" type="search" placeholder="搜尋原文或翻譯" />
+        </div>
+        <div id="sentenceList" class="sentence-list"></div>
+      </section>
+    </section>
+  </main>
+
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="app.js"></script>
+</body>
+</html>
