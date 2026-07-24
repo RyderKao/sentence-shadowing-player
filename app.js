@@ -249,32 +249,11 @@
       item.classList.toggle("active", Number(item.dataset.index) === state.currentIndex);
     });
 
-if (scrollIntoView) {
-  const active = document.querySelector(
-    `.sentence-item[data-index="${state.currentIndex}"]`
-  );
-
-  if (active && els.sentenceList) {
-    const activeRect = active.getBoundingClientRect();
-    const containerRect = els.sentenceList.getBoundingClientRect();
-
-    if (activeRect.top < containerRect.top) {
-      els.sentenceList.scrollTo({
-        top:
-          els.sentenceList.scrollTop -
-          (containerRect.top - activeRect.top),
-        behavior: "smooth"
-      });
-    } else if (activeRect.bottom > containerRect.bottom) {
-      els.sentenceList.scrollTo({
-        top:
-          els.sentenceList.scrollTop +
-          (activeRect.bottom - containerRect.bottom),
-        behavior: "smooth"
-      });
+    if (scrollIntoView) {
+      const active = document.querySelector(`.sentence-item[data-index="${state.currentIndex}"]`);
+      active?.scrollIntoView({ block: "nearest", behavior: "smooth" });
     }
   }
-}
 
   function renderSentenceList(filter = "") {
     const keyword = filter.trim().toLowerCase();
@@ -458,7 +437,7 @@ if (scrollIntoView) {
 
         if (els.autoNextCheckbox.checked && state.currentIndex < state.sentences.length - 1) {
           state.currentIndex += 1;
-          renderCurrentSentence();
+          renderCurrentSentence(false);
           setTimeout(playCurrentSentence, 180);
         }
       }
@@ -548,20 +527,20 @@ if (scrollIntoView) {
     if (state.currentIndex <= 0) return;
     stopPlayback();
     state.currentIndex -= 1;
-    renderCurrentSentence();
+    renderCurrentSentence(false);
   });
 
   els.nextBtn.addEventListener("click", () => {
     if (state.currentIndex >= state.sentences.length - 1) return;
     stopPlayback();
     state.currentIndex += 1;
-    renderCurrentSentence();
+    renderCurrentSentence(false);
   });
 
   els.sentenceSlider.addEventListener("input", () => {
     stopPlayback();
     state.currentIndex = Number(els.sentenceSlider.value);
-    renderCurrentSentence();
+    renderCurrentSentence(false);
   });
 
   els.speedSelect.addEventListener("change", () => {
